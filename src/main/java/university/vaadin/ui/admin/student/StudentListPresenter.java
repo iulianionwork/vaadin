@@ -1,74 +1,40 @@
 package university.vaadin.ui.admin.student;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.student.CreateStudentRequest;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.service.StudentService;
-import university.vaadin.ui.common.ListView;
+import university.vaadin.ui.common.AbstractListPresenter;
 
-import java.util.Set;
+import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequiredArgsConstructor
-public class StudentListPresenter {
+public class StudentListPresenter extends AbstractListPresenter<StudentResponse, CreateStudentRequest> {
 
     private final StudentService studentService;
-    private final Validator validator;
 
-    private ListView<StudentResponse> view;
-
-    public void init(ListView<StudentResponse> view) {
-        this.view = view;
-        loadStudents();
+    public StudentListPresenter(StudentService studentService, Validator validator){
+        super(validator);
+        this.studentService = studentService;
     }
 
 
-
-    public void onCreateClicked(String firstName, String lastName, String password) {
-        CreateStudentRequest request = new CreateStudentRequest(firstName, lastName, password);
-        view.clearFieldError();
-        Set<ConstraintViolation<CreateStudentRequest>> violations = validator.validate(request);
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<CreateStudentRequest> violation : violations) {
-                view.showFieldError(violation.getPropertyPath().toString(), violation.getMessage());
-            }
-            return;
-        }
-        try{
-            studentService.create(request);
-            view.closeCreatedDialog();
-            view.showSuccess("Student successful created");
-            loadStudents();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
-
+    @Override
+    protected List<StudentResponse> findAll() {
+        return studentService.getStudents();
     }
 
-    public void onDeleteClicked(Long studentId) {
-        try{
-            studentService.deleteStudent(studentId);
-            view.showSuccess("Student successfully deleted");
-            loadStudents();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
+    @Override
+    protected void create(CreateStudentRequest request) {
+        studentService.create(request);
     }
 
-
-    public void onDetailsClicked(Long studentId) {
-        view.navigateToDetails(studentId);
+    @Override
+    protected void delete(Long id) {
+        studentService.deleteStudent(id);
     }
-
-    private void loadStudents() {
-        view.show(studentService.getStudents());
-    }
-
-
 }

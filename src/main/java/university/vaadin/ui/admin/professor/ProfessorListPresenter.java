@@ -1,82 +1,39 @@
 package university.vaadin.ui.admin.professor;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.professor.CreateProfessorRequest;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
-import university.vaadin.backend.dto.professor.UpdateProfessorRequest;
 import university.vaadin.backend.service.ProfessorService;
-import university.vaadin.ui.common.ListView;
+import university.vaadin.ui.common.AbstractListPresenter;
 
-import java.util.Set;
+import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequiredArgsConstructor
-public class ProfessorListPresenter {
+public class ProfessorListPresenter extends AbstractListPresenter<ProfessorResponse, CreateProfessorRequest> {
 
     private final ProfessorService professorService;
-    private final Validator validator;
 
-    private ListView<ProfessorResponse> view;
-
-
-    public void init(ListView<ProfessorResponse>  view) {
-        this.view = view;
-        loadProfessor();
+    public ProfessorListPresenter(ProfessorService professorService, Validator validator) {
+        super(validator);
+        this.professorService = professorService;
     }
 
-    private void loadProfessor() {
-        view.show(professorService.getProfessors());
+    @Override
+    protected List<ProfessorResponse> findAll() {
+        return professorService.getProfessors();
     }
 
-    public void onCreateClicked(String firstName, String lastName, String password, String department) {
-        CreateProfessorRequest request = new CreateProfessorRequest(firstName, lastName, password, department);
-        view.clearFieldError();
-        Set<ConstraintViolation<CreateProfessorRequest>> violations = validator.validate(request);
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<CreateProfessorRequest> violation : violations) {
-                view.showFieldError(violation.getPropertyPath().toString(), violation.getMessage());
-            }
-            return;
-        }
-
-        try{
-            professorService.create(request);
-            view.closeCreatedDialog();
-            view.showSuccess("Professor successfully created");
-            loadProfessor();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
+    @Override
+    protected void create(CreateProfessorRequest request) {
+        professorService.create(request);
     }
 
-    public void onUpdateClicked(String firstName, String lastName, String department, Long professorId) {
-        try {
-            professorService.updateProfessor(professorId,
-                    new UpdateProfessorRequest(firstName, lastName, department));
-            view.closeCreatedDialog();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
+    @Override
+    protected void delete(Long id) {
+        professorService.deleteProfessor(id);
     }
-
-    public void onDeleteClicked(Long professorId) {
-        try {
-            professorService.deleteProfessor(professorId);
-            view.showSuccess("Professor successfully deleted");
-            loadProfessor();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
-    }
-
-    public void onDetailsClicked(Long professorId) {
-        view.navigateToDetails(professorId);
-    }
-
 }

@@ -15,6 +15,9 @@ import university.vaadin.ui.admin.course.CourseList;
 import university.vaadin.ui.admin.group.GroupList;
 import university.vaadin.ui.admin.professor.ProfessorList;
 import university.vaadin.ui.admin.student.StudentList;
+import university.vaadin.ui.professor.ProfessorCoursesImp;
+import university.vaadin.ui.profile.ProfileViewImp;
+import university.vaadin.ui.student.StudentCourseImp;
 
 @PermitAll
 public class MainLayout extends AppLayout implements MainLayoutView {
@@ -53,11 +56,14 @@ public class MainLayout extends AppLayout implements MainLayoutView {
 
     @Override
     public void showStudentMenu() {
-
+        menu.addItem(new SideNavItem("Profile", ProfileViewImp.class));
+        menu.addItem(new SideNavItem("Courses", StudentCourseImp.class));
     }
 
     @Override
     public void showProfessorMenu() {
+        menu.addItem(new SideNavItem("Profile", ProfileViewImp.class));
+        menu.addItem(new SideNavItem("Courses", ProfessorCoursesImp.class));
 
     }
 
