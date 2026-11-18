@@ -1,34 +1,49 @@
 package university.vaadin.ui.profile;
 
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
-import university.vaadin.ui.common.Notifications;
+import university.vaadin.backend.dto.course.CourseResponse;
+import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.ui.layout.MainLayout;
 
+import java.util.List;
 import java.util.Map;
 
-@Route(value = "profile", layout = MainLayout.class)
+@Route(value = "student/profile", layout = MainLayout.class)
 @PageTitle("Profile")
-@RolesAllowed({"STUDENT", "PROFESSOR"})
+@RolesAllowed({"STUDENT"})
 public class ProfileViewImp extends VerticalLayout  implements ProfileView {
 
-    private final H2 welcome = new H2();
+    private final H1 welcome = new H1();
     private final FormLayout form = new FormLayout();
+    private final Grid<CourseResponse> courseGrid = new Grid<>(CourseResponse.class, false);
 
-    public ProfileViewImp(ProfilePresenter presenter) {
+    public ProfileViewImp(ProfilePresenter<StudentResponse> presenter) {
         form.setMaxWidth("600px");
-        add(welcome, form);
+        courseGrid.addColumn(CourseResponse::courseName).setHeader("Course Name");
+        courseGrid.addColumn(CourseResponse::professorName).setHeader("Professor Name");
+        courseGrid.setWidthFull();
+        VerticalLayout profile =  new VerticalLayout( new H2("Profile:"), form);
+        VerticalLayout course =  new VerticalLayout( new H2("Courses:"), courseGrid);
+        HorizontalLayout content = new HorizontalLayout(profile,course);
+        content.setWidthFull();
+
+
+        add(welcome, content);
         presenter.init(this);
     }
 
     @Override
     public void showWelcome(String firstName) {
-        welcome.setText("Welcome " + firstName + " !");
+        welcome.setText("Welcome back " + firstName + " !");
     }
 
     @Override
@@ -42,12 +57,8 @@ public class ProfileViewImp extends VerticalLayout  implements ProfileView {
     }
 
     @Override
-    public void showSuccess(String message) {
-        Notifications.success(message);
+    public void showCourses(List<CourseResponse> courses) {
+        courseGrid.setItems(courses);
     }
 
-    @Override
-    public void showError(String message) {
-        Notifications.error(message);
-    }
 }

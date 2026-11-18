@@ -1,6 +1,7 @@
 package university.vaadin.ui.admin.student;
 
 import com.vaadin.flow.component.HasValidation;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -60,6 +61,7 @@ public class StudentDetailsImp extends VerticalLayout implements StudentDetails,
         Button save = new Button("Save", e -> presenter.onSaveClicked(firstName.getValue(), lastName.getValue()));
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         FormLayout form = new FormLayout(firstName, lastName, email, group);
+        form.setWidth("600px");
 
         issueCarnet.addClickListener(e -> presenter.onIssueCarnetClicked());
         HorizontalLayout carnetRow = new HorizontalLayout(carnetText, issueCarnet);
@@ -67,21 +69,24 @@ public class StudentDetailsImp extends VerticalLayout implements StudentDetails,
 
         courseBox.setPlaceholder("Choose a course");
         courseBox.setItemLabelGenerator(c -> c.courseName() + "(" + c.professorName() + ")");
+        courseBox.setWidth("400px");
         Button enroll = new Button("Enroll", e -> presenter.onEnrollClicked(
                 courseBox.getValue() == null ? null : courseBox.getValue().id()));
+        Button back = new Button("← Back", e -> presenter.onBackClicked());
+        back.addClickShortcut(Key.ESCAPE);
 
         courseGrid.addColumn(CourseResponse::courseName).setHeader("Course Name");
         courseGrid.addColumn(CourseResponse::professorName).setHeader("Professor Name");
         courseGrid.addComponentColumn(c -> {
             Button unenroll = new Button("Unenroll", e -> presenter.onUnenrollClicked(c.id()));
-            unenroll.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            unenroll.setThemeName("danger");
             return unenroll;
         });
         courseGrid.setAllRowsVisible(true);
 
-        add(new Button("← Back", e -> presenter.onBackClicked()),
+        add(back,
                 title,
-                new FormLayout(firstName, lastName, email, group),
+                form,
                 new H3("Carnet"), carnetRow,
                 new H3("Courses"), new HorizontalLayout(courseBox, enroll), courseGrid);
 
