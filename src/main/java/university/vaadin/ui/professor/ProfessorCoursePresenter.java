@@ -3,8 +3,15 @@ package university.vaadin.ui.professor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
+import university.vaadin.backend.dto.course.CourseResponse;
+import university.vaadin.backend.dto.student.StudentResponse;
+import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.CourseService;
+import university.vaadin.ui.common.Notifications;
+
+import java.util.List;
 
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -12,15 +19,25 @@ import university.vaadin.backend.service.CourseService;
 public class ProfessorCoursePresenter {
 
     private final CourseService courseService;
-    private ProfessorCourseView view;
+    private DetailsView<CourseResponse> view;
 
-    public void init(ProfessorCourseView view){
+    public void init(DetailsView<CourseResponse> view){
         this.view=view;
-        view.showCourses(courseService.getCoursesOfProfessor());
 
     }
 
-    public void onCourseClick(Long courseId){
-        view.navigateToCourse(courseId);
+    public void load(Long courseId) {
+        try {
+            List<StudentResponse> students = courseService.getStudentsOfMyCourse(courseId);
+            view.show(courseService.getCourseById(courseId));
+            view.showStudents(students);
+
+        }catch (NotFoundException | AccessDeniedException e){
+            Notifications.error(e.getMessage());
+        }
+    }
+
+    public void onBackClicked(){
+        view.navigateBack();
     }
 }

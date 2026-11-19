@@ -52,7 +52,7 @@ public class CourseService{
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public CourseResponse createCourse(CourseRequest request) {
+    public CourseResponse create(CourseRequest request) {
         Professor professor = professorRepository.findById(request.professorId())
                 .orElseThrow(() -> new NotFoundException("Professor not found: " + request.professorId()));
 
@@ -110,7 +110,7 @@ public class CourseService{
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteCourse(Long id) {
+    public void delete(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Course not found: " + id));
 
