@@ -28,7 +28,7 @@ import university.vaadin.ui.layout.MainPage;
                 presenter,
                 GroupResponse::id,
                 id -> UI.getCurrent().navigate(GroupPage.class, id));
-        registerField("Name", groupName);
+        registerField("groupName", groupName);
         build();
         presenter.init(this);
     }

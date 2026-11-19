@@ -16,8 +16,9 @@ import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.ui.admin.course.list.CoursesPage;
+import university.vaadin.ui.common.Notifications;
 import university.vaadin.ui.layout.MainPage;
-import university.vaadin.ui.professor.DetailsView;
+import university.vaadin.ui.common.DetailsView;
 
 import java.util.List;
 
@@ -76,6 +77,11 @@ public class CoursePage extends VerticalLayout implements DetailsView<CourseResp
     @Override
     public void showStudents(List<StudentResponse> students) {
         grid.setItems(students);
+    }
+
+    @Override
+    public void showError(String message) {
+        Notifications.error(message);
     }
 }
 

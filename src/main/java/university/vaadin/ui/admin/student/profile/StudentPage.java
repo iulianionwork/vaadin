@@ -24,6 +24,7 @@ import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.carnet.CarnetResponse;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
+import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.dto.student.UpdateStudentRequest;
 import university.vaadin.ui.admin.course.profile.CoursePage;
 import university.vaadin.ui.admin.student.list.StudentsPage;
@@ -73,7 +74,6 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
         header.add(back);
 
         Button edit = new Button("Edit", e -> openEditDialog());
-        back.addClickShortcut(Key.ESCAPE);
         group.setItemLabelGenerator(GroupResponse::groupName);
 
         editForm.add(firstName, lastName, group);
@@ -118,7 +118,7 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
         group.setItemLabelGenerator(GroupResponse::groupName);
         Button save =  new Button("Save", event -> {
             presenter.onSaveClicked(buildRequest(),group.getValue() == null ? null : group.getValue().id());
-            closeCreatedDialog();
+
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancel = new Button("Cancel", event -> createDialog.close());
@@ -155,6 +155,12 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
         UI.getCurrent().navigate(CoursePage.class, id);
     }
 
+
+    @Override
+    public void showStudent(StudentResponse student) {
+        firstName.setValue(student.firstName());
+        lastName.setValue(student.lastName());
+    }
 
     @Override
     public void showGroups(List<GroupResponse> groups, GroupResponse current) {
@@ -228,7 +234,7 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
     private UpdateStudentRequest buildRequest() {
         return new UpdateStudentRequest(firstName.getValue(), lastName.getValue());
     }
-
+    @Override
     public void closeCreatedDialog() {
         if(createDialog != null ){
             createDialog.close();

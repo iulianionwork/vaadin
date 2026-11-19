@@ -48,6 +48,7 @@ public class ProfessorPresenter {
             details.put("Department", professor.department());
             view.showDetails(details);
             view.showCourses(courseService.getCoursesOfProfessorById(professorId), true);
+            view.showProfessor(professor);
 
 
         }catch(NotFoundException e){
@@ -68,6 +69,7 @@ public class ProfessorPresenter {
 
         try{
             professorService.updateProfessor(professorId, request);
+            view.closeCreatedDialog();
             load(professorId);
             view.showSuccess("Successfully updated professor details");
         }catch(RuntimeException e){

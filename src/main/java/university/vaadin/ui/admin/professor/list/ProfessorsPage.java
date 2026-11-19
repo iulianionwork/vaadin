@@ -15,8 +15,8 @@ import university.vaadin.ui.admin.professor.profile.ProfessorPage;
 import university.vaadin.ui.common.ListPage;
 import university.vaadin.ui.layout.MainPage;
 
-@Route(value = "/admin/professors", layout = MainPage.class)
-@PageTitle("Students")
+@Route(value = "admin/professors", layout = MainPage.class)
+@PageTitle("Professors")
 @RolesAllowed("ADMIN")
     public class ProfessorsPage extends ListPage<ProfessorResponse, CreateProfessorRequest> {
 
@@ -33,10 +33,10 @@ import university.vaadin.ui.layout.MainPage;
                 presenter,
                 ProfessorResponse::id,
                 id -> UI.getCurrent().navigate(ProfessorPage.class, id));
-        registerField("First Name", firstName);
-        registerField("Last Name", lastName);
-        registerField("Department", department);
-        registerField("Password", password);
+        registerField("firstName", firstName);
+        registerField("lastName", lastName);
+        registerField("department", department);
+        registerField("password", password);
         build();
 
         presenter.init(this);

@@ -9,8 +9,7 @@ import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.CourseService;
-import university.vaadin.ui.common.Notifications;
-import university.vaadin.ui.professor.DetailsView;
+import university.vaadin.ui.common.DetailsView;
 
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class CoursePresenter {
             view.showStudents(students);
 
         }catch (NotFoundException | AccessDeniedException e){
-            Notifications.error(e.getMessage());
+            view.showError(e.getMessage());
         }
     }
 

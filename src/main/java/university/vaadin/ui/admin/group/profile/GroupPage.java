@@ -20,12 +20,13 @@ import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.ui.admin.group.list.GroupsPage;
+import university.vaadin.ui.common.Notifications;
 import university.vaadin.ui.layout.MainPage;
-import university.vaadin.ui.professor.DetailsView;
+import university.vaadin.ui.common.DetailsView;
 
 import java.util.List;
 
-@Route(value = "admin/gropus/details", layout = MainPage.class)
+@Route(value = "admin/groups/details", layout = MainPage.class)
 @PageTitle("Group")
 @RolesAllowed({"ADMIN"})
 public class GroupPage extends VerticalLayout implements DetailsView<GroupResponse>, HasUrlParameter<Long> {
@@ -79,6 +80,11 @@ public class GroupPage extends VerticalLayout implements DetailsView<GroupRespon
     @Override
     public void showStudents(List<StudentResponse> students) {
         grid.setItems(students);
+    }
+
+    @Override
+    public void showError(String message) {
+        Notifications.error(message);
     }
 
 }

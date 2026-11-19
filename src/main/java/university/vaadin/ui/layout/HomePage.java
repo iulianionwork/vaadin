@@ -6,8 +6,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import university.vaadin.backend.service.SecurityService;
 import university.vaadin.ui.admin.student.list.StudentsPage;
 import university.vaadin.ui.profile.ProfilePage;
 
@@ -17,13 +16,17 @@ import university.vaadin.ui.profile.ProfilePage;
 public class HomePage extends Div implements BeforeEnterObserver {
 
 
+    private final SecurityService securityService;
+
+    public HomePage(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Authentication auth =
-                SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+
+        if (securityService.hasRole("ADMIN")) {
 
             event.forwardTo(StudentsPage.class);
 

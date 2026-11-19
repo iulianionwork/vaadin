@@ -36,8 +36,8 @@ public class CoursesPage extends ListPage<CourseResponse, CourseRequest> impleme
                 id -> UI.getCurrent().navigate(CoursePage.class, id));
         professor.setItemLabelGenerator(p -> p.firstName() + " " + p.lastName());
 
-        registerField("Course Name", courseName);
-        registerField("Professor Name", professor);
+        registerField("courseName", courseName);
+        registerField("professorName", professor);
         build();
 
         presenter.init(this);

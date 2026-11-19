@@ -22,6 +22,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.course.CourseResponse;
+import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.dto.professor.UpdateProfessorRequest;
 import university.vaadin.ui.admin.course.profile.CoursePage;
 import university.vaadin.ui.admin.professor.list.ProfessorsPage;
@@ -30,7 +31,7 @@ import university.vaadin.ui.layout.MainPage;
 import java.util.List;
 import java.util.Map;
 
-@Route(value = "admin/professors/detail", layout = MainPage.class)
+@Route(value = "admin/professors/details", layout = MainPage.class)
 @PageTitle("Professor Details")
 @RolesAllowed("ADMIN")
 public class ProfessorPage extends VerticalLayout implements ProfessorView, HasUrlParameter<Long> {
@@ -68,7 +69,6 @@ public class ProfessorPage extends VerticalLayout implements ProfessorView, HasU
         header.add(back);
 
         Button edit = new Button("Edit", e -> openEditDialog());
-        back.addClickShortcut(Key.ESCAPE);
 
 
         editForm.add(firstName, lastName, department);
@@ -90,11 +90,11 @@ public class ProfessorPage extends VerticalLayout implements ProfessorView, HasU
 
     private void openEditDialog() {
         createDialog = new Dialog();
-        createDialog.setHeaderTitle("Update student");
+        createDialog.setHeaderTitle("Update professor");
         createDialog.add(editForm);
         Button save = new Button("Save", event -> {
             presenter.onSaveClicked(buildRequest());
-            closeCreatedDialog();
+
         });
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancel = new Button("Cancel", event -> createDialog.close());
@@ -131,6 +131,13 @@ public class ProfessorPage extends VerticalLayout implements ProfessorView, HasU
         UI.getCurrent().navigate(CoursePage.class, id);
     }
 
+
+    @Override
+    public void showProfessor(ProfessorResponse professor) {
+        firstName.setValue(professor.firstName());
+        lastName.setValue(professor.lastName());
+        department.setValue(professor.department());
+    }
 
     @Override
     public void showNotFound(String message) {

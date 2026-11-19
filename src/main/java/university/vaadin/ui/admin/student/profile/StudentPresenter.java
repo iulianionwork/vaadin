@@ -54,7 +54,7 @@ public class StudentPresenter {
             details.put("Email", student.email());
             details.put("Group", student.groupName() == null ? "Student is not assign to group yet!": student.groupName());
             view.showDetails(details);
-
+            view.showStudent(student);
             refreshCourses();
             showGroups(student);
             refreshCarnet();
@@ -105,6 +105,7 @@ public class StudentPresenter {
         try{
             studentService.updateStudent(studentId, request);
             studentService.assignStudentToGroup(groupId, studentId);
+            view.closeCreatedDialog();
             load(studentId);
             view.showSuccess("Successfully updated student details");
         }catch(RuntimeException e){

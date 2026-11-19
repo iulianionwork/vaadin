@@ -32,9 +32,9 @@ public class StudentsPage extends ListPage<StudentResponse, CreateStudentRequest
                 presenter,
                 StudentResponse::id,
                 id -> UI.getCurrent().navigate(StudentPage.class, id));
-        registerField("First Name", firstName);
-        registerField("Last Name", lastName);
-        registerField("Password", password);
+        registerField("firstName", firstName);
+        registerField("lastName", lastName);
+        registerField("password", password);
         build();
 
         presenter.init(this);

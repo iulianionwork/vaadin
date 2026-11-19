@@ -15,6 +15,8 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
+import university.vaadin.ui.common.DetailsView;
+import university.vaadin.ui.common.Notifications;
 import university.vaadin.ui.layout.MainPage;
 import university.vaadin.ui.profile.ProfilePage;
 
@@ -43,7 +45,7 @@ public class ProfessorCoursePage extends VerticalLayout  implements DetailsView<
             HorizontalLayout header = new HorizontalLayout();
             header.setWidthFull();
 
-            header.add(new H2(title));
+            header.add(title);
             header.addAndExpand(new Div()); // spacer
             header.add(back);
 
@@ -73,5 +75,10 @@ public class ProfessorCoursePage extends VerticalLayout  implements DetailsView<
     @Override
     public void showStudents(List<StudentResponse> students) {
             grid.setItems(students);
+    }
+
+    @Override
+    public void showError(String message) {
+        Notifications.error(message);
     }
 }
