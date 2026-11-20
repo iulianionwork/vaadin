@@ -3,9 +3,6 @@ package university.vaadin.ui.admin.student.profile;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
@@ -15,6 +12,7 @@ import university.vaadin.backend.service.CarnetService;
 import university.vaadin.backend.service.CourseService;
 import university.vaadin.backend.service.GroupService;
 import university.vaadin.backend.service.StudentService;
+import university.vaadin.ui.common.annotation.Presenter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,9 +20,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequiredArgsConstructor()
+@Presenter
+@RequiredArgsConstructor
 public class StudentPresenter {
 
     private final StudentService studentService;
@@ -163,10 +160,6 @@ public class StudentPresenter {
     private void refreshCarnet(){
         carnetService.findCarnetByStudentId(studentId)
                 .ifPresentOrElse(view::showCarnet, view::showNoCarnet);
-    }
-
-    public void onCourseClicked(Long courseId){
-        view.navigateToCourse(courseId);
     }
 
 }

@@ -1,18 +1,15 @@
 package university.vaadin.ui.admin.professor.list;
 
 import jakarta.validation.Validator;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.professor.CreateProfessorRequest;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.service.ProfessorService;
-import university.vaadin.ui.common.ListPresenter;
+import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.ListPresenter;
 
 import java.util.List;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Presenter
 public class ProfessorsPresenter extends ListPresenter<ProfessorResponse, CreateProfessorRequest> {
 
     private final ProfessorService professorService;

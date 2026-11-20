@@ -1,7 +1,8 @@
-package university.vaadin.ui.common;
+package university.vaadin.ui.common.presenter;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import university.vaadin.ui.common.ListView;
 
 import java.util.List;
 import java.util.Set;

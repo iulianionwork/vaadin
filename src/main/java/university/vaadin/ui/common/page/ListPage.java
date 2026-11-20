@@ -1,4 +1,4 @@
-package university.vaadin.ui.common;
+package university.vaadin.ui.common.page;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValidation;
@@ -12,6 +12,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import university.vaadin.ui.common.ListView;
+import university.vaadin.ui.common.Notifications;
+import university.vaadin.ui.common.presenter.ListPresenter;
 
 import java.util.LinkedHashMap;
 import java.util.List;

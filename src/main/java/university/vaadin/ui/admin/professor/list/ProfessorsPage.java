@@ -12,7 +12,7 @@ import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.professor.CreateProfessorRequest;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.ui.admin.professor.profile.ProfessorPage;
-import university.vaadin.ui.common.ListPage;
+import university.vaadin.ui.common.page.ListPage;
 import university.vaadin.ui.layout.MainPage;
 
 @Route(value = "admin/professors", layout = MainPage.class)

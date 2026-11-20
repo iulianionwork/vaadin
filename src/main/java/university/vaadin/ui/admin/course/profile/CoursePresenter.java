@@ -1,43 +1,29 @@
 package university.vaadin.ui.admin.course.profile;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
-import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.CourseService;
-import university.vaadin.ui.common.DetailsView;
+import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.DetailsPresenter;
 
 import java.util.List;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequiredArgsConstructor
-public class CoursePresenter {
+@Presenter
+public class CoursePresenter extends DetailsPresenter<CourseResponse> {
 
     private final CourseService courseService;
-    private DetailsView<CourseResponse> view;
 
-    public void init(DetailsView<CourseResponse> view){
-        this.view=view;
-
+    public CoursePresenter(CourseService courseService) {
+        this.courseService = courseService;
     }
 
-    public void load(Long courseId) {
-        try {
-            List<StudentResponse> students = courseService.getStudentsByCourseId(courseId);
-            view.show(courseService.getCourseById(courseId));
-            view.showStudents(students);
-
-        }catch (NotFoundException | AccessDeniedException e){
-            view.showError(e.getMessage());
-        }
+    @Override
+    protected CourseResponse findById(Long id) {
+        return courseService.getCourseById(id);
     }
 
-    public void onBackClicked(){
-        view.navigateBack();
+    @Override
+    protected List<StudentResponse> findStudents(Long id) {
+        return courseService.getStudentsByCourseId(id);
     }
 }

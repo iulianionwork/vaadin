@@ -14,7 +14,7 @@ import university.vaadin.backend.dto.course.CourseRequest;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.ui.admin.course.profile.CoursePage;
-import university.vaadin.ui.common.ListPage;
+import university.vaadin.ui.common.page.ListPage;
 import university.vaadin.ui.layout.MainPage;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class CoursesPage extends ListPage<CourseResponse, CourseRequest> impleme
         professor.setItemLabelGenerator(p -> p.firstName() + " " + p.lastName());
 
         registerField("courseName", courseName);
-        registerField("professorName", professor);
+        registerField("professorId", professor);
         build();
 
         presenter.init(this);

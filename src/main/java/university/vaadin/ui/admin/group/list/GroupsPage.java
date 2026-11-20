@@ -11,7 +11,7 @@ import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.group.GroupRequest;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.ui.admin.group.profile.GroupPage;
-import university.vaadin.ui.common.ListPage;
+import university.vaadin.ui.common.page.ListPage;
 import university.vaadin.ui.layout.MainPage;
 
 @Route(value = "admin/groups", layout = MainPage.class)

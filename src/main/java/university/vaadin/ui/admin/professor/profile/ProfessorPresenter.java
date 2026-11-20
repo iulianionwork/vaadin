@@ -4,21 +4,18 @@ package university.vaadin.ui.admin.professor.profile;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.dto.professor.UpdateProfessorRequest;
 import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.CourseService;
 import university.vaadin.backend.service.ProfessorService;
+import university.vaadin.ui.common.annotation.Presenter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Presenter
 @RequiredArgsConstructor()
 public class ProfessorPresenter {
 

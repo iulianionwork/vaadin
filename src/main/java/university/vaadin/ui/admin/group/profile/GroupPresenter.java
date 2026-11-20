@@ -1,43 +1,29 @@
 package university.vaadin.ui.admin.group.profile;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
-import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.GroupService;
-import university.vaadin.ui.common.DetailsView;
+import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.DetailsPresenter;
 
 import java.util.List;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequiredArgsConstructor
-public class GroupPresenter {
+@Presenter
+public class GroupPresenter extends DetailsPresenter<GroupResponse> {
 
     private final GroupService groupService;
-    private DetailsView<GroupResponse> view;
 
-    public void init(DetailsView<GroupResponse> view){
-        this.view=view;
-
+    public GroupPresenter(GroupService groupService) {
+        this.groupService = groupService;
     }
 
-    public void load(Long groupId) {
-        try {
-            List<StudentResponse> students = groupService.getStudentsFromGroup(groupId);
-            view.show(groupService.getGroupById(groupId));
-            view.showStudents(students);
-
-        }catch (NotFoundException | AccessDeniedException e){
-            view.showError(e.getMessage());
-        }
+    @Override
+    protected GroupResponse findById(Long id) {
+        return groupService.getGroupById(id);
     }
 
-    public void onBackClicked(){
-        view.navigateBack();
+    @Override
+    protected List<StudentResponse> findStudents(Long id) {
+        return groupService.getStudentsFromGroup(id);
     }
 }

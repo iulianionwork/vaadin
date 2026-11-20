@@ -1,18 +1,15 @@
 package university.vaadin.ui.admin.group.list;
 
 import jakarta.validation.Validator;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.group.GroupRequest;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.service.GroupService;
-import university.vaadin.ui.common.ListPresenter;
+import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.ListPresenter;
 
 import java.util.List;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Presenter
 public class GroupsPresenter extends ListPresenter<GroupResponse, GroupRequest> {
 
     private final GroupService groupService;
