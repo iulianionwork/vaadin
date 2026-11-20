@@ -25,7 +25,7 @@ public class CoursePage extends DetailsPage<CourseResponse> {
     @Override
     public void show(CourseResponse course) {
         title.setText(course.courseName());
-        info.setText(course.professorName());
+        info.setText("Professor: " + course.professorName());
     }
 
     @Override

@@ -1,37 +1,32 @@
 package university.vaadin.ui.profile;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.service.CourseService;
 import university.vaadin.backend.service.SecurityService;
 import university.vaadin.backend.service.UserService;
+import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.BasePresenter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Presenter
 @RequiredArgsConstructor
-public class ProfilePresenter {
+public class ProfilePresenter extends BasePresenter<ProfileView> {
 
     private final UserService userService;
     private final CourseService courseService;
     private final SecurityService securityService;
-    private ProfileView view;
     private final  HashMap<String, String> details = new LinkedHashMap<>();
 
-
-    public void init(ProfileView view){
-        this.view = view;
-         if(securityService.hasRole("STUDENT")){
-             showStudent();
-         } else{
-             showProfessor();
-         }
+    public void onInit(){
+        if(securityService.hasRole("STUDENT")){
+            showStudent();
+        } else{
+            showProfessor();
+        }
     }
 
     private void showProfessor() {
@@ -67,8 +62,5 @@ public class ProfilePresenter {
     public void onCourseClicked(Long courseId){
         view.navigateToCourse(courseId);
     }
-
-
-
 
 }

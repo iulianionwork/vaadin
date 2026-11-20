@@ -22,7 +22,7 @@ public class GroupPage extends DetailsPage<GroupResponse> {
     @Override
     public void show(GroupResponse group) {
         title.setText(group.groupName());
-        info.setText(String.valueOf(group.studentCount()));
+        info.setText("Number of Students: " + group.studentCount());
     }
 
     @Override

@@ -31,17 +31,10 @@ public class StudentPresenter extends BasePresenter<StudentView> {
 
     private Long studentId;
 
-    @Override
-    public void onInit(){
-        load(studentId);
-    }
-
     public void load(Long studentId) {
         this.studentId = studentId;
         try{
             StudentResponse student = studentService.getStudentById(studentId);
-
-            view.showWelcome(student.firstName());
 
             details.put("First Name", student.firstName());
             details.put("Last Name", student.lastName());
@@ -69,7 +62,7 @@ public class StudentPresenter extends BasePresenter<StudentView> {
                 .toList();
 
         view.showAvailableCourses(allCourses);
-        view.showCourses(courses, false);
+        view.showCourses(courses);
     }
 
     private void showGroups(StudentResponse student) {
@@ -87,7 +80,7 @@ public class StudentPresenter extends BasePresenter<StudentView> {
             return;
         }
         if(groupId == null){
-            view.showError("Please select a group");
+            view.showFieldError("groupId","Please select a group");
             return;
         }
 
@@ -102,10 +95,9 @@ public class StudentPresenter extends BasePresenter<StudentView> {
 
     }
 
-
     public void onEnrollClicked(Long courseId){
         if(courseId == null){
-            view.showError("Please select a course");
+            view.showFieldError("courseId","Please select a course");
             return;
         }
 
@@ -125,18 +117,14 @@ public class StudentPresenter extends BasePresenter<StudentView> {
 
     }
 
-
-
-
     public void onIssueCarnetClicked() {
 
         if(execute(()->  carnetService.issueCarnet(studentId),
                 "Carnet issue successfully" )){
-            refreshCourses();
+            refreshCarnet();
         }
 
     }
-
 
 
     public void onBackClicked() {

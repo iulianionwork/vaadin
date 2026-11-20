@@ -22,24 +22,18 @@ public class ProfessorPresenter extends BasePresenter<ProfessorView> {
     private final HashMap<String, String> details = new LinkedHashMap<>();
     private Long professorId;
 
-    @Override
-    public void onInit(){
-        load(professorId);
-    }
-
     public void load(Long professorId) {
         this.professorId = professorId;
         try{
             ProfessorResponse professor = professorService.getProfessorById(professorId);
 
-            view.showWelcome(professor.firstName());
 
             details.put("First Name", professor.firstName());
             details.put("Last Name", professor.lastName());
             details.put("Email", professor.email());
             details.put("Department", professor.department());
             view.showDetails(details);
-            view.showCourses(courseService.getCoursesOfProfessorById(professorId), true);
+            view.showCourses(courseService.getCoursesOfProfessorById(professorId));
             view.showProfessor(professor);
 
 

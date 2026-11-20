@@ -5,11 +5,11 @@ import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.ui.common.view.BaseView;
-import university.vaadin.ui.profile.ProfileView;
 
 import java.util.List;
+import java.util.Map;
 
-public interface StudentView extends ProfileView, BaseView {
+public interface StudentView extends BaseView {
 
     void closeCreatedDialog();
     void showStudent(StudentResponse student);
@@ -19,4 +19,6 @@ public interface StudentView extends ProfileView, BaseView {
     void showNoCarnet();
     void showNotFound(String message);
     void navigateBack();
+    void showDetails(Map<String,String> details);
+    void showCourses(List<CourseResponse> courses);
 }

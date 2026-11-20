@@ -13,6 +13,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import university.vaadin.backend.dto.course.CourseResponse;
+import university.vaadin.ui.common.page.BasePage;
 import university.vaadin.ui.layout.MainPage;
 import university.vaadin.ui.professor.ProfessorCoursePage;
 
@@ -22,7 +23,7 @@ import java.util.Map;
 @Route(value = "profile", layout = MainPage.class)
 @PageTitle("Profile")
 @RolesAllowed({"STUDENT", "PROFESSOR"})
-public class ProfilePage extends VerticalLayout  implements ProfileView {
+public class ProfilePage extends BasePage implements ProfileView {
 
     private final  ProfilePresenter presenter;
     private final H1 welcome = new H1();

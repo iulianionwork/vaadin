@@ -25,7 +25,6 @@ import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.dto.student.UpdateStudentRequest;
-import university.vaadin.ui.admin.course.profile.CoursePage;
 import university.vaadin.ui.admin.student.list.StudentsPage;
 import university.vaadin.ui.common.page.BasePage;
 import university.vaadin.ui.layout.MainPage;
@@ -40,7 +39,7 @@ public class StudentPage extends BasePage implements StudentView, HasUrlParamete
 
 
     private final StudentPresenter presenter;
-    private final H1 welcome = new H1();
+    private final H1 welcome = new H1("Student Profile");
     private final FormLayout form = new FormLayout();
     private final FormLayout editForm = new FormLayout();
     private final Grid<CourseResponse> courseGrid = new Grid<>(CourseResponse.class, false);
@@ -80,7 +79,7 @@ public class StudentPage extends BasePage implements StudentView, HasUrlParamete
         courseGrid.addColumn(CourseResponse::professorName).setHeader("Professor");
         courseGrid.addComponentColumn(c -> {
             Button unenroll = new Button("Unenroll", e -> presenter.onUnenrollClicked(c.id()));
-            unenroll.setThemeName("danger");
+            unenroll.addThemeVariants(ButtonVariant.LUMO_ERROR);
             return unenroll;
         });
         courseGrid.setWidthFull();
@@ -97,6 +96,9 @@ public class StudentPage extends BasePage implements StudentView, HasUrlParamete
                 courseBox.getValue() == null ? null : courseBox.getValue().id()));
         enroll.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
 
+        registerField("firstName", firstName);
+        registerField("lastName", lastName);
+        registerField("groupId", group);
 
 
         VerticalLayout profile =  new VerticalLayout(new HorizontalLayout(new H2("Profile:"), edit), form, new H2("Carnet:"), carnetRow);
@@ -126,11 +128,6 @@ public class StudentPage extends BasePage implements StudentView, HasUrlParamete
     }
 
     @Override
-    public void showWelcome(String firstName) {
-        welcome.setText("Student Profile");
-    }
-
-    @Override
     public void showDetails(Map<String, String> details) {
         form.removeAll();
         details.forEach((label, value) -> {
@@ -143,16 +140,9 @@ public class StudentPage extends BasePage implements StudentView, HasUrlParamete
     }
 
     @Override
-    public void showCourses(List<CourseResponse> courses, boolean withDetails) {
-
+    public void showCourses(List<CourseResponse> courses) {
         courseGrid.setItems(courses);
     }
-
-    @Override
-    public void navigateToCourse(Long id) {
-        UI.getCurrent().navigate(CoursePage.class, id);
-    }
-
 
     @Override
     public void showStudent(StudentResponse student) {

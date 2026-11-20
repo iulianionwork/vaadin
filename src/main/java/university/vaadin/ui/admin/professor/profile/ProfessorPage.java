@@ -36,7 +36,7 @@ public class ProfessorPage extends BasePage implements ProfessorView, HasUrlPara
 
 
     private final ProfessorPresenter presenter;
-    private final H1 welcome = new H1();
+    private final H1 welcome = new H1("Professor profile");
     private final FormLayout form = new FormLayout();
     private final FormLayout editForm = new FormLayout();
     private final Grid<CourseResponse> courseGrid = new Grid<>(CourseResponse.class, false);
@@ -75,6 +75,10 @@ public class ProfessorPage extends BasePage implements ProfessorView, HasUrlPara
         courseGrid.addComponentColumn(s -> new Button("Details", e -> presenter.onCourseClicked(s.id())));
         courseGrid.setWidthFull();
 
+        registerField("firstName", firstName);
+        registerField("lastName", lastName);
+        registerField("department", department);
+
 
         VerticalLayout profile = new VerticalLayout(new HorizontalLayout(new H2("Profile:"), edit), form);
         VerticalLayout course = new VerticalLayout(new H2("Courses:"), courseGrid);
@@ -102,11 +106,6 @@ public class ProfessorPage extends BasePage implements ProfessorView, HasUrlPara
     }
 
     @Override
-    public void showWelcome(String firstName) {
-        welcome.setText("Professor Profile");
-    }
-
-    @Override
     public void showDetails(Map<String, String> details) {
         form.removeAll();
         details.forEach((label, value) -> {
@@ -120,7 +119,7 @@ public class ProfessorPage extends BasePage implements ProfessorView, HasUrlPara
     }
 
     @Override
-    public void showCourses(List<CourseResponse> courses, boolean withDetails) {
+    public void showCourses(List<CourseResponse> courses) {
         courseGrid.setItems(courses);
     }
 
