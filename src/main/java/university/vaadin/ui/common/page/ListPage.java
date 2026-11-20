@@ -1,8 +1,6 @@
 package university.vaadin.ui.common.page;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValidation;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -11,18 +9,14 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import university.vaadin.ui.common.ListView;
-import university.vaadin.ui.common.Notifications;
+import university.vaadin.ui.common.view.ListView;
 import university.vaadin.ui.common.presenter.ListPresenter;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public abstract class ListPage<E,R> extends VerticalLayout implements ListView<E> {
+public abstract class ListPage<E,R> extends BasePage implements ListView<E> {
 
     private final String title;
     private final String entityName;
@@ -31,7 +25,6 @@ public abstract class ListPage<E,R> extends VerticalLayout implements ListView<E
     private final Consumer<Long> detailes;
 
     protected final Grid<E> grid;
-    private final Map<String, HasValidation> fields = new LinkedHashMap<>();
     private Dialog createDialog;
 
     protected ListPage(String title,
@@ -76,17 +69,10 @@ public abstract class ListPage<E,R> extends VerticalLayout implements ListView<E
         add(header, grid);
     }
 
-    protected void registerField(String fieldName, HasValidation validation) {
-        fields.put(fieldName, validation);
-    }
+
 
     private void openCreateDialog() {
-        for(HasValidation field : fields.values()){
-            if(field instanceof HasValue<?, ?> value){
-                value.clear();
-            }
-        }
-        clearFieldError();
+        cleanForm();
         createDialog = new Dialog();
         createDialog.setHeaderTitle("Create "+ entityName);
         createDialog.add(createForm());
@@ -118,40 +104,12 @@ public abstract class ListPage<E,R> extends VerticalLayout implements ListView<E
         grid.setItems(fields);
     }
 
-    @Override
-    public void showSuccess(String message) {
-        Notifications.success(message);
-    }
-
-    @Override
-    public void showError(String message) {
-        Notifications.error(message);
-    }
 
     @Override
     public void navigateToDetails(Long id) {
         detailes.accept(id);
     }
 
-    @Override
-    public void showFieldError(String field, String message) {
-        HasValidation validation = fields.get(field);
-
-        if(validation == null){
-            showError(message);
-            return;
-        }
-
-        validation.setErrorMessage(message);
-        validation.setInvalid(true);
-
-    }
-
-    @Override
-    public void clearFieldError() {
-        fields.values().forEach(field -> field.setInvalid(false));
-
-    }
 
     @Override
     public void closeCreatedDialog() {

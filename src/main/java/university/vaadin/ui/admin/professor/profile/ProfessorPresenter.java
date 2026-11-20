@@ -1,8 +1,6 @@
 package university.vaadin.ui.admin.professor.profile;
 
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.dto.professor.UpdateProfessorRequest;
@@ -10,26 +8,23 @@ import university.vaadin.backend.exception.NotFoundException;
 import university.vaadin.backend.service.CourseService;
 import university.vaadin.backend.service.ProfessorService;
 import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.BasePresenter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Set;
 
 @Presenter
 @RequiredArgsConstructor()
-public class ProfessorPresenter {
+public class ProfessorPresenter extends BasePresenter<ProfessorView> {
 
     private final ProfessorService professorService;
     private final CourseService courseService;
-    private final Validator validator;
     private final HashMap<String, String> details = new LinkedHashMap<>();
-
-    private ProfessorView view;
     private Long professorId;
 
-
-    public void init(ProfessorView view) {
-        this.view = view;
+    @Override
+    public void onInit(){
+        load(professorId);
     }
 
     public void load(Long professorId) {
@@ -55,23 +50,19 @@ public class ProfessorPresenter {
 
 
     public void onSaveClicked(UpdateProfessorRequest request) {
-        view.clearFieldError();
-        Set<ConstraintViolation<UpdateProfessorRequest>> errors = validator.validate(request);
-        if(!errors.isEmpty()) {
-            for(ConstraintViolation<UpdateProfessorRequest> error : errors) {
-                view.showFieldError(error.getPropertyPath().toString(), error.getMessage());
-            }
+
+        if(!isValid(request)){
             return;
         }
 
-        try{
-            professorService.updateProfessor(professorId, request);
+
+        if(execute(()->
+            professorService.updateProfessor(professorId, request)
+        ,"Successfully updated professor details" )){
             view.closeCreatedDialog();
             load(professorId);
-            view.showSuccess("Successfully updated professor details");
-        }catch(RuntimeException e){
-            view.showError(e.getMessage());
         }
+
 
     }
 

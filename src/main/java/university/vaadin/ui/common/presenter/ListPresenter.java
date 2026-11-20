@@ -1,58 +1,36 @@
 package university.vaadin.ui.common.presenter;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import university.vaadin.ui.common.ListView;
+import university.vaadin.ui.common.view.ListView;
 
 import java.util.List;
-import java.util.Set;
 
 
-public abstract class ListPresenter<E,R>  {
-
-    private final Validator validator;
-    protected ListView<E> view;
-
-    protected ListPresenter(Validator validator) {
-        this.validator = validator;
-    }
+public abstract class ListPresenter<E,R> extends BasePresenter<ListView<E>>  {
 
     protected abstract List<E> findAll();
     protected abstract void create(R request);
     protected abstract void delete(Long id);
 
-    public void init(ListView<E> view) {
-        this.view = view;
+
+    public void onCreateClicked(R request) {
+
+        if (isValid(request) && execute(() -> create(request), "Successfully created!")) {
+            view.closeCreatedDialog();
+            load();
+        }
+
+
+    }
+
+    @Override
+    public void onInit(){
         load();
     }
 
-    public void onCreateClicked(R request) {
-        view.clearFieldError();
-        Set<ConstraintViolation<R>> errors = validator.validate(request);
-        if (!errors.isEmpty()) {
-            for (ConstraintViolation<R> error : errors) {
-                view.showFieldError(error.getPropertyPath().toString(), error.getMessage());
-            }
-            return;
-        }
-        try{
-            create(request);
-            view.closeCreatedDialog();
-            view.showSuccess("Successfully created");
-            load();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
-        }
-
-    }
-
     public void onDeleteClicked(Long id) {
-        try{
-            delete(id);
-            view.showSuccess("Successfully deleted");
+
+        if(execute(() -> delete(id), "Successfully deleted!")){
             load();
-        }catch (RuntimeException ex){
-            view.showError(ex.getMessage());
         }
     }
 

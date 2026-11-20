@@ -1,7 +1,7 @@
 package university.vaadin.ui.admin.professor.profile;
 
 import university.vaadin.backend.dto.professor.ProfessorResponse;
-import university.vaadin.ui.common.BaseView;
+import university.vaadin.ui.common.view.BaseView;
 import university.vaadin.ui.profile.ProfileView;
 
 public interface ProfessorView extends ProfileView, BaseView {

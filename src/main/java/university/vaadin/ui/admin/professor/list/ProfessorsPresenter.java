@@ -1,6 +1,6 @@
 package university.vaadin.ui.admin.professor.list;
 
-import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
 import university.vaadin.backend.dto.professor.CreateProfessorRequest;
 import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.service.ProfessorService;
@@ -10,14 +10,10 @@ import university.vaadin.ui.common.presenter.ListPresenter;
 import java.util.List;
 
 @Presenter
+@RequiredArgsConstructor
 public class ProfessorsPresenter extends ListPresenter<ProfessorResponse, CreateProfessorRequest> {
 
     private final ProfessorService professorService;
-
-    public ProfessorsPresenter(ProfessorService professorService, Validator validator) {
-        super(validator);
-        this.professorService = professorService;
-    }
 
     @Override
     protected List<ProfessorResponse> findAll() {

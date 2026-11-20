@@ -1,6 +1,5 @@
 package university.vaadin.ui.admin.professor.profile;
 
-import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -11,8 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,6 +23,7 @@ import university.vaadin.backend.dto.professor.ProfessorResponse;
 import university.vaadin.backend.dto.professor.UpdateProfessorRequest;
 import university.vaadin.ui.admin.course.profile.CoursePage;
 import university.vaadin.ui.admin.professor.list.ProfessorsPage;
+import university.vaadin.ui.common.page.BasePage;
 import university.vaadin.ui.layout.MainPage;
 
 import java.util.List;
@@ -34,7 +32,7 @@ import java.util.Map;
 @Route(value = "admin/professors/details", layout = MainPage.class)
 @PageTitle("Professor Details")
 @RolesAllowed("ADMIN")
-public class ProfessorPage extends VerticalLayout implements ProfessorView, HasUrlParameter<Long> {
+public class ProfessorPage extends BasePage implements ProfessorView, HasUrlParameter<Long> {
 
 
     private final ProfessorPresenter presenter;
@@ -149,42 +147,12 @@ public class ProfessorPage extends VerticalLayout implements ProfessorView, HasU
         UI.getCurrent().navigate(ProfessorsPage.class);
     }
 
-    @Override
-    public void showSuccess(String message) {
-        Notification.show(message).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-    }
-
-    @Override
-    public void showError(String message) {
-        Notification.show(message).addThemeVariants(NotificationVariant.LUMO_ERROR);
-    }
-
-    @Override
-    public void showFieldError(String field, String message) {
-        switch (field) {
-            case "firstName" -> markInvalid(firstName, message);
-            case "lastName" -> markInvalid(lastName, message);
-            case "department" -> markInvalid(department, message);
-            default -> showError(message);
-        }
-    }
-
-    @Override
-    public void clearFieldError() {
-        firstName.setInvalid(false);
-        lastName.setInvalid(false);
-        department.setInvalid(false);
-    }
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long aLong) {
         presenter.load(aLong);
     }
 
-    private void markInvalid(HasValidation field, String message) {
-        field.setErrorMessage(message);
-        field.setInvalid(true);
-    }
 
     private UpdateProfessorRequest buildRequest() {
         return new UpdateProfessorRequest(firstName.getValue(), lastName.getValue(), department.getValue());

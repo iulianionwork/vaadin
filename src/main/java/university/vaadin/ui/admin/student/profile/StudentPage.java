@@ -1,6 +1,7 @@
 package university.vaadin.ui.admin.student.profile;
 
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -11,8 +12,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,16 +27,16 @@ import university.vaadin.backend.dto.student.StudentResponse;
 import university.vaadin.backend.dto.student.UpdateStudentRequest;
 import university.vaadin.ui.admin.course.profile.CoursePage;
 import university.vaadin.ui.admin.student.list.StudentsPage;
+import university.vaadin.ui.common.page.BasePage;
 import university.vaadin.ui.layout.MainPage;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Route(value = "admin/students/detail", layout = MainPage.class)
 @PageTitle("Student Details")
 @RolesAllowed("ADMIN")
-public class StudentPage extends VerticalLayout  implements StudentView, HasUrlParameter<Long> {
+public class StudentPage extends BasePage implements StudentView, HasUrlParameter<Long> {
 
 
     private final StudentPresenter presenter;
@@ -51,7 +50,6 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
     private final TextField lastName = new TextField("Last Name");
     private final ComboBox<GroupResponse> group = new ComboBox<>("Group");
 
-    private final Map<String, HasValidation> fields = new LinkedHashMap<>();
     private Dialog createDialog;
 
     private final Span carnetText = new Span();
@@ -196,44 +194,18 @@ public class StudentPage extends VerticalLayout  implements StudentView, HasUrlP
         UI.getCurrent().navigate(StudentsPage.class);
     }
 
-    @Override
-    public void showSuccess(String message) {
-        Notification.show(message).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-    }
 
-    @Override
-    public void showError(String message) {
-        Notification.show(message).addThemeVariants(NotificationVariant.LUMO_ERROR);
-    }
-
-    @Override
-    public void showFieldError(String field, String message) {
-        switch(field){
-            case "firstName" -> markInvalid(firstName, message);
-            case "lastName" -> markInvalid(lastName, message);
-            default -> showError(message);
-        }
-    }
-
-    @Override
-    public void clearFieldError() {
-        firstName.setInvalid(false);
-        lastName.setInvalid(false);
-    }
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long aLong) {
         presenter.load(aLong);
     }
 
-    private void markInvalid(HasValidation field, String message) {
-        field.setErrorMessage(message);
-        field.setInvalid(true);
-    }
 
     private UpdateStudentRequest buildRequest() {
         return new UpdateStudentRequest(firstName.getValue(), lastName.getValue());
     }
+
     @Override
     public void closeCreatedDialog() {
         if(createDialog != null ){

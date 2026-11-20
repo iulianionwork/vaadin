@@ -1,4 +1,4 @@
-package university.vaadin.ui.common;
+package university.vaadin.ui.common.view;
 
 public interface BaseView {
 

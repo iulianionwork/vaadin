@@ -12,10 +12,8 @@ import university.vaadin.backend.service.SecurityService;
 public class MainPresenter {
 
     private final SecurityService securityService;
-    private MainView view;
 
     public void init(MainView view){
-        this.view = view;
         view.showUserName(securityService.getUsername());
 
         if(securityService.hasRole("ADMIN")){

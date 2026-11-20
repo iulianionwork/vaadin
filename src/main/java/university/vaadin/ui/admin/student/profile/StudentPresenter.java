@@ -1,7 +1,5 @@
 package university.vaadin.ui.admin.student.profile;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
@@ -13,6 +11,7 @@ import university.vaadin.backend.service.CourseService;
 import university.vaadin.backend.service.GroupService;
 import university.vaadin.backend.service.StudentService;
 import university.vaadin.ui.common.annotation.Presenter;
+import university.vaadin.ui.common.presenter.BasePresenter;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,21 +21,19 @@ import java.util.stream.Collectors;
 
 @Presenter
 @RequiredArgsConstructor
-public class StudentPresenter {
+public class StudentPresenter extends BasePresenter<StudentView> {
 
     private final StudentService studentService;
     private final GroupService groupService;
     private final CourseService courseService;
     private final CarnetService carnetService;
-    private final Validator validator;
     private final HashMap<String, String> details = new LinkedHashMap<>();
 
-    private StudentView view;
     private Long studentId;
 
-
-    public void init(StudentView view) {
-        this.view = view;
+    @Override
+    public void onInit(){
+        load(studentId);
     }
 
     public void load(Long studentId) {
@@ -86,12 +83,7 @@ public class StudentPresenter {
     }
 
     public void onSaveClicked(UpdateStudentRequest request, Long groupId) {
-        view.clearFieldError();
-        Set<ConstraintViolation<UpdateStudentRequest>> errors = validator.validate(request);
-        if(!errors.isEmpty()) {
-            for(ConstraintViolation<UpdateStudentRequest> error : errors) {
-                view.showFieldError(error.getPropertyPath().toString(), error.getMessage());
-            }
+        if(!isValid(request)){
             return;
         }
         if(groupId == null){
@@ -99,15 +91,14 @@ public class StudentPresenter {
             return;
         }
 
-        try{
+        if(execute(()->{
             studentService.updateStudent(studentId, request);
             studentService.assignStudentToGroup(groupId, studentId);
+        },"Successfully updated student details" )){
             view.closeCreatedDialog();
             load(studentId);
-            view.showSuccess("Successfully updated student details");
-        }catch(RuntimeException e){
-            view.showError(e.getMessage());
         }
+
 
     }
 
@@ -118,36 +109,32 @@ public class StudentPresenter {
             return;
         }
 
-        try{
-            courseService.enrollStudentToCourse(courseId, studentId);
-            view.showSuccess("Successfully enrolled student to course");
+        if(execute(()-> courseService.enrollStudentToCourse(courseId, studentId),
+                "Successfully enrolled student to course" )){
             refreshCourses();
-        }catch(RuntimeException e){
-            view.showError(e.getMessage());
         }
+
     }
 
     public void onUnenrollClicked(Long courseId) {
-        try {
-            courseService.unenrollStudentFromCourse(courseId, studentId);
+
+        if(execute(()->  courseService.unenrollStudentFromCourse(courseId, studentId),
+                "Successfully unenrolled student from course" )){
             refreshCourses();
-            view.showSuccess("Successfully unenrolled student from course");
-        } catch (RuntimeException e) {
-            view.showError(e.getMessage());
         }
+
     }
 
 
 
 
     public void onIssueCarnetClicked() {
-        try{
-            carnetService.issueCarnet(studentId);
-            view.showSuccess("Carnet issue successfully");
-            refreshCarnet();
-        }catch(RuntimeException e){
-            view.showError(e.getMessage());
+
+        if(execute(()->  carnetService.issueCarnet(studentId),
+                "Carnet issue successfully" )){
+            refreshCourses();
         }
+
     }
 
 

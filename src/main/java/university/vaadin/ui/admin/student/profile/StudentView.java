@@ -4,7 +4,7 @@ import university.vaadin.backend.dto.carnet.CarnetResponse;
 import university.vaadin.backend.dto.course.CourseResponse;
 import university.vaadin.backend.dto.group.GroupResponse;
 import university.vaadin.backend.dto.student.StudentResponse;
-import university.vaadin.ui.common.BaseView;
+import university.vaadin.ui.common.view.BaseView;
 import university.vaadin.ui.profile.ProfileView;
 
 import java.util.List;
